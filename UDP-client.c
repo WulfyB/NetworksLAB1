@@ -13,19 +13,31 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#define SERVERPORT "10023"	// the port users will be connecting to
+//#define SERVERPORT "10023"	// the port users will be connecting to
+#define MAXBUFLEN 252
 
-#define MAXBUFLEN 100
+static char requestID = 0;
+
+typedef unsigned char uchar;
 
 int main(int argc, char *argv[])
 {
 	int sockfd;
 	struct addrinfo hints, *servinfo, *p;
+	int messageSize = strlen(argv[4]);
+	struct packedMessage
+	{
+		uchar tMessageLength;
+		uchar requestID;
+		uchar operation;
+		uchar *messageToSend = malloc(sizeof(uchar) * strlen(argv[4]));
+	}__attribute__((__packed__));
+		
 	int rv;
 	char buf[MAXBUFLEN];	
 	int numbytes;
 
-	if (argc != 3) {
+	if (argc != 5) {
 		fprintf(stderr,"usage: talker hostname message\n");
 		exit(1);
 	}
@@ -34,11 +46,20 @@ int main(int argc, char *argv[])
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
 
-	if ((rv = getaddrinfo(argv[1], SERVERPORT, &hints, &servinfo)) != 0) {
+	if ((rv = getaddrinfo(argv[1], argv[2], &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 		return 1;
 	}
 
+	if(strcmp(argv[3], "5") != 0) 
+	{
+		fprintf(stderr, "Invalid Operation: Please input a valid operation.");
+		return 1;
+	}
+	
+	//char message[strlen(argv[4])] = argv[4];
+	struct packedMessage pm = {(sizeof(*argv[4]) + 3), (uchar)requestID, *argv[3], *argv[4]};
+	
 	// loop through all the results and make a socket
 	for(p = servinfo; p != NULL; p = p->ai_next) {
 		if ((sockfd = socket(p->ai_family, p->ai_socktype,
@@ -54,12 +75,15 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "talker: failed to create socket\n");
 		return 2;
 	}
-
-	if ((numbytes = sendto(sockfd, argv[2], strlen(argv[2]), 0,
+					
+	if ((numbytes = sendto(sockfd, (char*)&pm, sizeof(pm), 0,
 			 p->ai_addr, p->ai_addrlen)) == -1) {
 		perror("talker: sendto");
 		exit(1);
 	}
+	
+	//printf("%d\n", sizeof(pm));
+	//printf("%d\n", strlen(argv[4]));
 
 	freeaddrinfo(servinfo);
 
@@ -80,4 +104,7 @@ int main(int argc, char *argv[])
 	close(sockfd);
 
 	return 0;
+
+	if (requestID == 255)
+		requestID = 0;
 }
