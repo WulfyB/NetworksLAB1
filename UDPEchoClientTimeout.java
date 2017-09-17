@@ -11,7 +11,7 @@ public class UDPEchoClientTimeout {
    private static final int TIMEOUT = 3000; // Resend timeout (milliseconds) 
    private static final int MAXTRIES = 5; // Maximum retransmissions 
    
-   public static void main(String[] args) {
+   public static void main(String[] args) throws IOException {
    
       if (args.length > 4) 
       {
@@ -26,7 +26,7 @@ public class UDPEchoClientTimeout {
          System.err.println("Please input a valid operation: 10, 5, or 80.");
          return;
       }
-      int RID = 0; //needs to increment somehow? 
+      int RID = 0; //needs to increment somehow? I still don't know how to do this.
       
       String message = "";
       int count = 0;
@@ -56,39 +56,64 @@ public class UDPEchoClientTimeout {
       
       for(int i = 3; i < TML; i++)
       {
-         bytesToSend[i] = bytesMessage[i - 3];
+         bytesToSend[i] = bytesMessage[i - 3];//creates byte package
       }
-      InetAddressserverAddress = InetAddress.getByName(args[1]); // Server address 
-      // Convert input String to bytes using the default character encoding  
       
-      intservPort = args[2]; 
+      try{ //try block for attempting to send and recieve the message
+         InetAddress serverAddress = InetAddress.getByName(args[1]); // Server address 
       
-      DatagramSocket socket = new DatagramSocket();
-      socket.setSoTimeout(TIMEOUT); // Maximum receive blocking time (milliseconds) 
-      DatagramPacket sendPacket = new DatagramPacket(bytesToSend, // Sending packet 
-         bytesToSend.length, serverAddress, servPort);
-      DatagramPacket receivePacket = // Receiving packet         
-         new DatagramPacket(new byte[bytesToSend.length], bytesToSend.length);
-      int tries = 0; // Packets may be lost, so we have to keep trying 
-      boolean receivedResponse = false; 
-      do 
-      { 
-         socket.send(sendPacket);
-         try   
-         {
-            socket.receive(receivePacket);
-            receivedResponse = true;
-         } 
-         catch (SocketTimeoutExdception ste) 
-         {
-            tries ++;
-            //do nothing
-         }
-         //MANAGE TIMEOUTS
-      } while ((!receivedResponse) && (tries < MAXTRIES)); 
-      if (receivedResponse) 
-         System.out.println("Received: " + new String(receivePacket.getData())); 
-      else 
-         System.out.println("No response -- giving up."); 
-      socket.close(); }
+   
+      // Convert input String to bytes using the default character encoding 
+      
+      int servPort = Integer.parseInt(args[2]); //servPort as an integer 
+      
+     
+         DatagramSocket socket = new DatagramSocket();
+      
+      
+      
+         socket.setSoTimeout(TIMEOUT); // Maximum receive blocking time (milliseconds) 
+      
+      
+         DatagramPacket sendPacket = new DatagramPacket(bytesToSend, // Sending packet 
+            bytesToSend.length, serverAddress, servPort);
+            
+         DatagramPacket receivePacket = // Receiving packet         
+            new DatagramPacket(new byte[bytesToSend.length], bytesToSend.length);
+            
+         int tries = 0; // Packets may be lost, so we have to keep trying 
+         boolean receivedResponse = false; 
+         do 
+         { 
+            socket.send(sendPacket);
+            try   
+            {
+               socket.receive(receivePacket); //recieves response from server
+               receivedResponse = true;
+            } 
+            catch (SocketTimeoutException ste) 
+            {
+               tries ++; //increments tries
+            }
+         } while ((!receivedResponse) && (tries < MAXTRIES)); 
+         if (receivedResponse) 
+            System.out.println("Received: " + new String(receivePacket.getData())); 
+         else 
+            System.out.println("No response -- giving up."); 
+         socket.close(); 
+      
+      }
+      catch (UnknownHostException uhe)
+      {
+         System.err.println("Failed to find host.");
+         return;
+      }
+      catch (SocketException se)
+      {
+         System.err.println("Failed to create socket.");
+         return;
+      }
+      
+   }
+      
 }
