@@ -1,6 +1,7 @@
 import java.net.*; // for Socket
 import java.io.*; // for IOException and Input/OutputStream
 import java.util.Arrays;
+import java.text.DecimalFormat;
 
 public class ClientTCP {
 	static byte requestID = 7;
@@ -50,8 +51,9 @@ public class ClientTCP {
 			InputStream in = socket.getInputStream();
 			OutputStream out = socket.getOutputStream();
 			out.write(byteBuffer); // Send the encoded string to the server
-			System.out.println("Sent: " + args[3]);
 			
+			long startTime = System.nanoTime();
+				
 			// Receive the response  back from the server
 			int totalBytesRcvd = 0; // Total bytes received so far
 			int bytesRcvd; // Bytes received in last read
@@ -78,7 +80,9 @@ public class ClientTCP {
 			else
 				System.out.println("RequestID: " + returnedRequestID + " Received: " 
 					+ new String(Arrays.copyOfRange(responseBuffer, 1, responseBuffer.length)));
-			
+			DecimalFormat frmt = new DecimalFormat("#.000");
+			long difference = System.nanoTime() - startTime;
+			System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds");
 			socket.close(); // Close the socket and its streams
 	}
 }
