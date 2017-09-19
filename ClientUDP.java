@@ -6,7 +6,8 @@
 
 import java.net.*; // for DatagramSocket, DatagramPacket, and InetAddress
 import java.io.*; // for IOException
-public class UDPEchoClientTimeout { 
+import java.text.DecimalFormat; //for Formating
+public class ClientUDP { 
 
    private static final int TIMEOUT = 3000; // Resend timeout (milliseconds) 
    private static final int MAXTRIES = 5; // Maximum retransmissions 
@@ -26,7 +27,7 @@ public class UDPEchoClientTimeout {
          System.err.println("Please input a valid operation: 10, 5, or 80.");
          return;
       }
-      int RID = 0; //needs to increment somehow? I still don't know how to do this.
+      int RID = 0x0D; //needs to increment somehow? I still don't know how to do this.
       
       String message = "";
       int count = 0;
@@ -58,16 +59,16 @@ public class UDPEchoClientTimeout {
       {
          bytesToSend[i] = bytesMessage[i - 3];//creates byte package
       }
-      
+      long startTime = System.nanoTime();
       try{ //try block for attempting to send and recieve the message
          InetAddress serverAddress = InetAddress.getByName(args[1]); // Server address 
       
-   
+      
       // Convert input String to bytes using the default character encoding 
       
-      int servPort = Integer.parseInt(args[2]); //servPort as an integer 
+         int servPort = Integer.parseInt(args[2]); //servPort as an integer 
       
-     
+      
          DatagramSocket socket = new DatagramSocket();
       
       
@@ -96,8 +97,13 @@ public class UDPEchoClientTimeout {
                tries ++; //increments tries
             }
          } while ((!receivedResponse) && (tries < MAXTRIES)); 
-         if (receivedResponse) 
-            System.out.println("Received: " + new String(receivePacket.getData())); 
+         if (receivedResponse)
+         {
+            long difference = System.nanoTime() - startTime;
+            DecimalFormat frmt = new DecimalFormat("#.000");
+            System.out.println("Received: " + new String(receivePacket.getData()));
+            System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds"); 
+         } 
          else 
             System.out.println("No response -- giving up."); 
          socket.close(); 
