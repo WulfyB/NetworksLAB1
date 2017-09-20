@@ -20,7 +20,7 @@ public class ClientUDP {
          System.err.println("Parameter(s): <Server> <Port> <Operation> <String>");
          return; 
       }
-      boolean invalidOperation = (args[2].equals("10") && args[2].equals("5") && args[2].equals("80"));
+      boolean invalidOperation = !(args[2].equals("10") && args[2].equals("5") && args[2].equals("80"));
       if (invalidOperation)
       {
       //Tests for valid operations
@@ -40,7 +40,7 @@ public class ClientUDP {
          }
          message += temp + " ";
       }
-	*/
+   */
       message = args[3];
       message = message.substring(0, message.length());
       System.out.println("Message: " + message);
@@ -104,8 +104,9 @@ public class ClientUDP {
          {
             long difference = System.nanoTime() - startTime;
             DecimalFormat frmt = new DecimalFormat("#.000");
-            System.out.println("Received: " + new String(receivePacket.getData()));
-            System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds"); 
+            String receivedMessage = new String(receivePacket.getData(), 2, receivePacket.getData()[0] - 2);
+            System.out.println("Received: " + receivedMessage);
+            System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds");
          } 
          else 
             System.out.println("No response -- giving up."); 
