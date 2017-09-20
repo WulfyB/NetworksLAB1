@@ -1,6 +1,5 @@
 /*
-** ServerUDP.c -- UDP Server for Lab 1
-*  20 September 2017 - Process string before returning to client -DH
+** listener.c -- a datagram sockets "server" demo
 */
 
 #include <stdio.h>
@@ -49,11 +48,12 @@ int main(void)
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE; // use my IP
 
+	while (1){
 	if ((rv = getaddrinfo(NULL, MYPORT, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 		return 1;
 	}
-
+	
 	// loop through all the results and bind to the first we can
 	for(p = servinfo; p != NULL; p = p->ai_next) {
 		if ((sockfd = socket(p->ai_family, p->ai_socktype,
@@ -94,21 +94,21 @@ int main(void)
 	printf("listener: packet is %d bytes long\n", numbytes);
 	buf[numbytes] = '\0';
 	printf("listener: packet contains \"%s\"\n", buf);
-  //process string here before returning
+	  //process string here before returning
   
-  unsigned char totalMessageLength = buf[0];
-  unsigned char requestID = buf[1];
-  unsigned char operation = buf[2];
-  char message[totalMessageLength - 3];
+	  unsigned char totalMessageLength = buf[0];
+	  unsigned char requestID = buf[1];
+	  unsigned char operation = buf[2];
+	  char message[totalMessageLength - 3];
   
-  //Get the message
+	  //Get the message
 	int i;
 	for (i = 0; i < sizeof(message); i++) {
 		 message[i] = buf[i + 3];
 	}
-  printf("size of message: %d\n", sizeof(message)); 
+	  printf("size of message: %d\n", sizeof(message)); 
   
-  //process request here
+	  //process request here
 	char response[252];
 	int responseSize = 0;
 
@@ -120,12 +120,12 @@ int main(void)
 	buf[1] = requestID;
 	printf("response size: %d\n", responseSize); 
 		 
-  //Add response back to buffer
+	  //Add response back to buffer
 	for (i = 0; i < responseSize; i++) {
 	buf[i + 2] = response[i];
-  }
+	  }
   
-  //end processing string
+	  //end processing string
 	if(sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) != 
   strlen(buf))
 	{
@@ -133,7 +133,7 @@ int main(void)
 	}
 	
 	close(sockfd);
-
+	}//END OF BIG WHILE
 	return 0;
 }
 //Thanks to Lane for the following:
