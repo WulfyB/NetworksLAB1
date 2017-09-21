@@ -15,7 +15,6 @@ public class ClientTCP {
 
 			// Convert input String to bytes using the default character encoding
 			byte[] messageBuffer = args[3].getBytes();
-			System.out.println(messageBuffer.length);
 			if (messageBuffer.length > 252)
 				throw new IllegalArgumentException("Message can be no longer than 252 characters");
 
