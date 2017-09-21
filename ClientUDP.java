@@ -42,9 +42,9 @@ public class ClientUDP {
       }
        */
       message = args[3];
-      message = message.substring(0, message.length());
+      //message = message.substring(0, message.length());
       System.out.println("Message: " + message);
-      byte[] bytesMessage = message.getBytes(); 
+      byte[] bytesMessage = args[3].getBytes(); 
       boolean sizeInvalid = (bytesMessage.length > 252);
       if (sizeInvalid)
       {
@@ -116,7 +116,8 @@ public class ClientUDP {
                System.out.println("Received: " + receivePacket.getData()[2]);
             }
             else {
-               String receivedMessage = new String(receivePacket.getData(), 2, receivePacket.getData()[0] - 2);
+               int receiveTML = receivePacket.getData()[0] & 0xFF; //Java is stupid
+               String receivedMessage = new String(receivePacket.getData(), 2, receiveTML - 2);
                System.out.println("Received: " + receivedMessage);
                System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds");
             }
