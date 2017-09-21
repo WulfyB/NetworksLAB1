@@ -104,8 +104,17 @@ public class ClientUDP {
          {
             long difference = System.nanoTime() - startTime;
             DecimalFormat frmt = new DecimalFormat("#.000");
+            if (RID != receivePacket.getData()[1])
+            {
+               System.err.println("The server's returned RID does not match input RID. \nCheck program. Output received as follows:  \n\n");
+               
+            }
+            if(RID == 5) 
+            {
+               System.out.println("RequestID: " + RID + "Received: " + receivePacket.getData()[2]);
+            }
             String receivedMessage = new String(receivePacket.getData(), 2, receivePacket.getData()[0] - 2);
-            System.out.println("Received: " + receivedMessage);
+            System.out.println("RequestID: " + RID + "Received: " + receivedMessage);
             System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds");
          } 
          else 
