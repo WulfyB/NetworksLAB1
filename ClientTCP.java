@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.text.DecimalFormat;
 
 public class ClientTCP {
-	static byte requestID = 7;
+	static byte requestID = 0x0D;
 
 	public static void main(String[] args) throws IOException {
 
