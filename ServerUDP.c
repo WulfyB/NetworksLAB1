@@ -91,9 +91,9 @@ int main(void)
 		inet_ntop(their_addr.ss_family,
 			get_in_addr((struct sockaddr *)&their_addr),
 			s, sizeof s));
-	printf("listener: packet is %d bytes long\n", numbytes);
+//	printf("listener: packet is %d bytes long\n", numbytes);
 	buf[numbytes] = '\0';
-	printf("listener: packet contains \"%s\"\n", buf);
+//	printf("listener: packet contains \"%s\"\n", buf);
 	  //process string here before returning
   
 	  unsigned char totalMessageLength = buf[0];
@@ -106,7 +106,7 @@ int main(void)
 	for (i = 0; i < sizeof(message); i++) {
 		 message[i] = buf[i + 3];
 	}
-	  printf("size of message: %d\n", sizeof(message)); 
+//	  printf("size of message: %d\n", sizeof(message)); 
   
 	  //process request here
 	char response[252];
@@ -114,11 +114,11 @@ int main(void)
 
 	performOperation(operation, message, sizeof(message), response, &responseSize);	  
 	totalMessageLength = responseSize + 2;
-	printf("total message length: %d\n", totalMessageLength);
+//	printf("total message length: %d\n", totalMessageLength);
 		 
 	buf[0] = totalMessageLength;
 	buf[1] = requestID;
-	printf("response size: %d\n", responseSize); 
+//	printf("response size: %d\n", responseSize); 
 		 
 	  //Add response back to buffer
 	for (i = 0; i < responseSize; i++) {

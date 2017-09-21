@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.text.DecimalFormat;
 
 public class ClientTCP {
-	static byte requestID = 7;
+	static byte requestID = 0x0D; //13
 
 	public static void main(String[] args) throws IOException {
 
@@ -64,7 +64,7 @@ public class ClientTCP {
 			while ((receivedMessageLength = in.read()) < 0){};
 			receivedMessageLength = receivedMessageLength & 0xFF;
 			
-			System.out.println("Received message length: " + receivedMessageLength);
+			//System.out.println("Received message length: " + receivedMessageLength);
 			byte[] responseBuffer = new byte[receivedMessageLength - 1]; //not accounting for the byte already read
 			while (totalBytesRcvd < responseBuffer.length) {
 				if ((bytesRcvd = in.read(responseBuffer, totalBytesRcvd, 
