@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) // _M1
 
 			buf[numbytes] = '\0';
 
-			printf("Server: received encoded message. Size: %d\n", buf[0]);
+	//		printf("Server: received encoded message. Size: %d\n", buf[0]);
 			// _M2 End add
 
 			// displayBuffer(buf,numbytes); // _M3
@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) // _M1
 			{
 				message[i] = buf[i + 3];
 			}
-			printf("size of message: %d\n", sizeof(message)); 
+	//		printf("size of message: %d\n", sizeof(message)); 
 
 			//process request here
 			char response[252];
@@ -177,11 +177,11 @@ int main(int argc, char *argv[]) // _M1
 
 			performOperation(operation, message, sizeof(message), response, &responseSize);	  
 			totalMessageLength = responseSize + 2;
-			printf("total message length: %d\n", totalMessageLength);
+	//		printf("total message length: %d\n", totalMessageLength);
 
 			buf[0] = totalMessageLength;
 			buf[1] = requestID;
-			printf("response size: %d\n", responseSize); 
+	//		printf("response size: %d\n", responseSize); 
 
 			//Add response back to buffer
 			for (i = 0; i < responseSize; i++) 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) // _M1
 				exit(1); 
 			}
 
-			printf("Sent response.\n");
+	//		printf("Sent response.\n");
 			close(new_fd);
 			exit(0);
 		}
