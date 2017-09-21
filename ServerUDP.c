@@ -15,7 +15,7 @@
 
 #define MYPORT "10023"	// the port users will be connecting to
 
-#define MAXBUFLEN 100
+#define MAXBUFLEN 255
 
 void performOperation(char op, char message[], int messageSize, char response[], int *responseSize);
 void uppercase(char message[], int messageSize);
