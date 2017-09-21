@@ -14,7 +14,7 @@ public class ClientUDP {
    
    public static void main(String[] args) throws IOException {
    
-      if (args.length > 4) 
+      if (args.length == 4) 
       {
       // Test for correct # of args     
          System.err.println("Parameter(s): <Server> <Port> <Operation> <String>");
@@ -109,13 +109,15 @@ public class ClientUDP {
                System.err.println("The server's returned RID does not match input RID. \nCheck program. Output received as follows:  \n\n");
                
             }
+            System.out.println("RequestID: " + RID);
             if(args[2] == "5") 
             {
-               System.out.println("RequestID: " + RID + "\nReceived: " + receivePacket.getData()[2]);
+               
+               System.out.println("Received: " + receivePacket.getData()[2]);
             }
             else {
                String receivedMessage = new String(receivePacket.getData(), 2, receivePacket.getData()[0] - 2);
-               System.out.println("RequestID: " + RID + "\nReceived: " + receivedMessage);
+               System.out.println("Received: " + receivedMessage);
                System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds");
             }
          } 
