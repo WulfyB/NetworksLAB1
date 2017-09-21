@@ -112,8 +112,8 @@ public class ClientUDP {
             System.out.println("RequestID: " + RID);
             if(args[2].equals("5")) 
             {
-               
-               System.out.println("Received: " + receivePacket.getData()[2]);
+               int signCorrection = receivePacket.getData()[2] & 0xFF;
+               System.out.println("Received: " +  signCorrection);
             }
             else {
                int receiveTML = receivePacket.getData()[0] & 0xFF; //Java is stupid
