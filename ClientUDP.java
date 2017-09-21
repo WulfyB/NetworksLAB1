@@ -14,7 +14,7 @@ public class ClientUDP {
    
    public static void main(String[] args) throws IOException {
    
-      if (args.length > 4) 
+      if (args.length != 4) 
       {
       // Test for correct # of args     
          System.err.println("Parameter(s): <Server> <Port> <Operation> <String>");
@@ -42,9 +42,9 @@ public class ClientUDP {
       }
        */
       message = args[3];
-      message = message.substring(0, message.length());
+      //message = message.substring(0, message.length());
       System.out.println("Message: " + message);
-      byte[] bytesMessage = message.getBytes(); 
+      byte[] bytesMessage = args[3].getBytes(); 
       boolean sizeInvalid = (bytesMessage.length > 252);
       if (sizeInvalid)
       {
@@ -109,13 +109,18 @@ public class ClientUDP {
                System.err.println("The server's returned RID does not match input RID. \nCheck program. Output received as follows:  \n\n");
                
             }
-            if(RID == 5) 
+            System.out.println("RequestID: " + RID);
+            if(args[2].equals("5")) 
             {
-               System.out.println("RequestID: " + RID + "Received: " + receivePacket.getData()[2]);
+               int signCorrection = receivePacket.getData()[2] & 0xFF;
+               System.out.println("Received: " +  signCorrection);
             }
-            String receivedMessage = new String(receivePacket.getData(), 2, receivePacket.getData()[0] - 2);
-            System.out.println("RequestID: " + RID + "Received: " + receivedMessage);
-            System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds");
+            else {
+               int receiveTML = receivePacket.getData()[0] & 0xFF; //Java is stupid
+               String receivedMessage = new String(receivePacket.getData(), 2, receiveTML - 2);
+               System.out.println("Received: " + receivedMessage);
+               System.out.println("Round trip time: " + frmt.format(difference * 0.000001) + " milliseconds");
+            }
          } 
          else 
             System.out.println("No response -- giving up."); 
