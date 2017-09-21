@@ -20,7 +20,7 @@ public class ClientUDP {
          System.err.println("Parameter(s): <Server> <Port> <Operation> <String>");
          return; 
       }
-      boolean invalidOperation = !(args[2].equals("10") && args[2].equals("5") && args[2].equals("80"));
+      boolean invalidOperation = !(args[2].equals("10") || args[2].equals("5") || args[2].equals("80"));
       if (invalidOperation)
       {
       //Tests for valid operations
@@ -40,7 +40,7 @@ public class ClientUDP {
          }
          message += temp + " ";
       }
-   */
+       */
       message = args[3];
       message = message.substring(0, message.length());
       System.out.println("Message: " + message);
